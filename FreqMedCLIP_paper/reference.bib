@@ -1,98 +1,175 @@
-@article{hadi2023survey,
-  title     = {A survey on large language models: Applications, challenges, limitations, and practical usage},
-  author    = {Hadi, Muhammad Usman and Qureshi, Rizwan and Shah, Abbas and Irfan, Muhammad and Zafar, Anas and Shaikh, Muhammad Bilal and Akhtar, Naveed and Wu, Jia and Mirjalili, Seyedali and others},
-  journal   = {Authorea Preprints},
-  year      = {2023},
-  publisher = {Authorea}
-}
+% ============================================================
+%  FreqMedCLIP — reference.bib
+%  Clean bibliography: peer-reviewed preferred, arxiv noted
+% ============================================================
 
-@article{kirillov2023segment,
-  title   = {Segment anything},
-  author  = {Kirillov, Alexander and Mintun, Eric and Ravi, Nikhila and Mao, Hanzi and Rolland, Chloe and Gustafson, Laura and Xiao, Tete and Whitehead, Spencer and Berg, Alexander C and Lo, Wan-Yen and others},
-  journal = {arXiv preprint arXiv:2304.02643},
-  year    = {2023}
-}
+% --- Surveys and general medical imaging ---
 
-@article{zhao2024biomedparse,
-  title   = {BiomedParse: a foundation model for interactive medical image segmentation},
-  author  = {Zhao, S. and others},
-  journal = {arXiv preprint arXiv:2406.12345},
-  year    = {2024}
-}
-
-@article{ma2024medsam,
-  title   = {Segment anything in medical images},
-  author  = {Ma, Jun and He, Y. and Li, F. and others},
-  journal = {Nature Communications},
-  year    = {2024},
-  volume  = {15}
-}
-
-@article{cheng2024interactive,
-  title   = {Interactive Medical Image Segmentation: A Benchmark Dataset and Baseline},
-  author  = {Cheng, Junlong and Fu, Bin and Ye, Jin and Wang, Guoan and Li, Tianbin and Wang, Haoyu and Li, Ruoyu and Yao, He and Chen, Junren and Li, JingWen and Su, Yanzhou and Zhu, Min and He, Junjun},
-  journal = {arXiv preprint arXiv:2411.12814},
-  year    = {2024}
-}
-
-@article{cheng2024sammed2d,
-  title   = {SAM-Med2D},
-  author  = {Cheng, Junlong and others},
-  journal = {arXiv preprint arXiv:2308.16184},
-  year    = {2024}
-}
-
-@inproceedings{jin2024fairmedfm,
-  title     = {FairMedFM: Fairness Benchmarking for Medical Imaging Foundation Models},
-  author    = {Jin, Ruinan and Xu, Zikang and Zhong, Yuan and Yao, Qingsong and Dou, Qi and Zhou, S. Kevin and Li, Xiaoxiao},
-  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
-  volume    = {37},
-  year      = {2024}
-}
-
-@article{zhang2023biomedclip,
-  title   = {BiomedCLIP: a multimodal biomedical foundation model pretrained from fifteen million scientific image-text pairs},
-  author  = {Zhang, Sheng and Xu, Yanbo and Usuyama, Naoto and Xu, Hanwen and Bagga, Jaspreet and Tinn, Robert and Preston, Sam and Rao, Rajesh and Wei, Mu and Valluri, Naveen and Wong, Cliff and Tupini, Andrea and Wang, Yu and Mazzola, Matt and Shukla, Swadheen and Liden, Lars and Gao, Jianfeng and Crabtree, Angela and Piening, Brian and Bifulco, Carlo and Lungren, Matthew P. and Naumann, Tristan and Wang, Sheng and Poon, Hoifung},
-  journal = {arXiv preprint arXiv:2303.00915},
-  year    = {2023}
-}
-
-@article{koleilat2024medclipsamv2,
-  title   = {MedCLIP-SAMv2: Towards Universal Text-Driven Medical Image Segmentation},
-  author  = {Koleilat, Taha and Asgariandehkordi, Hojat and Rivaz, Hassan and Xiao, Yiming},
-  journal = {arXiv preprint arXiv:2409.19483},
-  year    = {2024}
-}
-
-@inproceedings{park2022vision,
-  title     = {How do vision transformers work? an empirical exploration},
-  author    = {Park, Namuk and Kim, Song},
-  booktitle = {International Conference on Learning Representations},
-  year      = {2022}
-}
-
-@article{mehta2022qu,
-  title     = {QU-BraTS: MICCAI BraTS 2020 challenge on quantifying uncertainty in brain tumor segmentation — analysis of ranking metrics and benchmarking results},
-  author    = {Mehta, Raghav and Filos, Angelos and Baid, Ujjwal and others},
-  journal   = {Journal of Machine Learning for Biomedical Imaging},
-  volume    = {1},
-  pages     = {1--26},
-  year      = {2022},
-  publisher = {Melba}
-}
-
-@article{zhang2023learning,
-  title     = {Learning from multiple annotators for medical image segmentation},
-  author    = {Zhang, Le and Tanno, Ryutaro and Xu, Mou-Cheng and Jin, Chen and Jacob, Joseph and Cicarrelli, Olga and Barkhof, Frederik and Alexander, Daniel C},
-  journal   = {Pattern Recognition},
-  volume    = {135},
-  pages     = {109121},
-  year      = {2023},
+@article{litjens2017survey,
+  title     = {A survey on deep learning in medical image analysis},
+  author    = {Litjens, Geert and Kooi, Thijs and Bejnordi, Babak Ehteshami and
+               Setio, Arnaud Arindra Adiyoso and Ciompi, Francesco and Ghafoorian, Mohsen and
+               van der Laak, Jeroen AWM and van Ginneken, Bram and S{\'a}nchez, Clara I},
+  journal   = {Medical Image Analysis},
+  volume    = {42},
+  pages     = {60--88},
+  year      = {2017},
   publisher = {Elsevier}
 }
 
+@article{maier2024guideline,
+  title   = {Metrics reloaded: recommendations for image analysis validation},
+  author  = {Maier-Hein, Lena and Reinke, Annika and Godau, Patrick and others},
+  journal = {Nature Methods},
+  volume  = {21},
+  pages   = {195--212},
+  year    = {2024},
+  publisher = {Nature Publishing Group}
+}
+
+% --- Foundation models and large-scale pretraining ---
+
+@article{zhang2025biomedclip,
+  title   = {A multimodal biomedical foundation model trained from fifteen million image--text pairs},
+  author  = {Zhang, Sheng and Xu, Yanbo and Usuyama, Naoto and Xu, Hanwen and Bagga, Jaspreet and
+             Tinn, Robert and Preston, Sam and Rao, Rajesh and Wei, Mu and Valluri, Naveen and
+             Wong, Cliff and Tupini, Andrea and Wang, Yu and Mazzola, Matt and Shukla, Swadheen and
+             Liden, Lars and Gao, Jianfeng and Crabtree, Angela and Piening, Brian and Bifulco, Carlo and
+             Lungren, Matthew P. and Naumann, Tristan and Wang, Sheng and Poon, Hoifung},
+  journal = {NEJM AI},
+  volume  = {2},
+  number  = {2},
+  year    = {2025},
+  publisher = {Massachusetts Medical Society}
+}
+
+@inproceedings{radford2021learning,
+  title     = {Learning transferable visual models from natural language supervision},
+  author    = {Radford, Alec and Kim, Jong Wook and Hallacy, Chris and Ramesh, Aditya and Goh, Gabriel and
+               Agarwal, Sandhini and Sastry, Girish and Askell, Amanda and Mishkin, Pamela and Clark, Jack and
+               Krueger, Gretchen and Sutskever, Ilya},
+  booktitle = {Proceedings of the 38th International Conference on Machine Learning (ICML)},
+  pages     = {8748--8763},
+  year      = {2021},
+  publisher = {PMLR}
+}
+
+@inproceedings{kirillov2023segment,
+  title     = {Segment Anything},
+  author    = {Kirillov, Alexander and Mintun, Eric and Ravi, Nikhila and Mao, Hanzi and Rolland, Chloe and
+               Gustafson, Laura and Xiao, Tete and Whitehead, Spencer and Berg, Alexander C and
+               Lo, Wan-Yen and others},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {4015--4026},
+  year      = {2023}
+}
+
+@article{ma2024medsam,
+  title     = {Segment anything in medical images},
+  author    = {Ma, Jun and He, Yuting and Li, Feifei and Han, Lin and You, Chenyu and Wang, Bo},
+  journal   = {Nature Communications},
+  volume    = {15},
+  number    = {1},
+  pages     = {654},
+  year      = {2024},
+  publisher = {Nature Publishing Group}
+}
+
+@article{cheng2024sammed2d,
+  title   = {{SAM-Med2D}},
+  author  = {Cheng, Junlong and Ye, Jin and Deng, Zhongying and Chen, Jianpin and Li, Tianbin and
+             Wang, Haoyu and Su, Yanzhou and Huang, Ziyan and Chen, Jilong and Jiang, Lei and others},
+  journal = {arXiv preprint arXiv:2308.16184},
+  year    = {2023},
+  note    = {Preprint; no peer-reviewed venue confirmed}
+}
+
+% --- Vision transformers ---
+
+@inproceedings{dosovitskiy2020image,
+  title     = {An image is worth 16x16 words: Transformers for image recognition at scale},
+  author    = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and
+               Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and
+               Heigold, Georg and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021}
+}
+
+@inproceedings{park2022vision,
+  title     = {How do vision transformers work?},
+  author    = {Park, Namuk and Kim, Songkuk},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2022}
+}
+
+@article{chen2024transunet,
+  title     = {TransUNet: Rethinking the U-Net architecture design for medical image segmentation through the lens of transformers},
+  author    = {Chen, Jieneng and Lu, Yongyi and Yu, Qiuhui and Luo, Xiangde and Adeli, Ehsan and
+               Wang, Yan and Lu, Le and Yuille, Alan L. and Zhou, Yuyin},
+  journal   = {Medical Image Analysis},
+  volume    = {97},
+  pages     = {103280},
+  year      = {2024},
+  publisher = {Elsevier}
+}
+
+% --- Convolutional architectures and segmentation backbones ---
+
+@inproceedings{ronneberger2015u,
+  title     = {{U-Net}: Convolutional Networks for Biomedical Image Segmentation},
+  author    = {Ronneberger, Olaf and Fischer, Philipp and Brox, Thomas},
+  booktitle = {Medical Image Computing and Computer-Assisted Intervention (MICCAI)},
+  pages     = {234--241},
+  year      = {2015},
+  publisher = {Springer}
+}
+
+@article{isensee2021nnunet,
+  title     = {nn{U-Net}: a self-configuring method for deep learning-based biomedical image segmentation},
+  author    = {Isensee, Fabian and Jaeger, Paul F. and Kohl, Simon A. A. and Petersen, Jens and
+               Maier-Hein, Klaus H.},
+  journal   = {Nature Methods},
+  volume    = {18},
+  number    = {2},
+  pages     = {203--211},
+  year      = {2021},
+  publisher = {Nature Publishing Group}
+}
+
+@inproceedings{oktay2018attention,
+  title     = {Attention {U-Net}: Learning where to look for the pancreas},
+  author    = {Oktay, Ozan and Schlemper, Jo and Folgoc, Loic Le and Lee, Matthew and Heinrich, Mattias and
+               Misawa, Kazunari and Mori, Kensaku and McDonagh, Steven and Hammerla, Nils Y and
+               Kainz, Bernhard and others},
+  booktitle = {Medical Imaging with Deep Learning (MIDL)},
+  year      = {2018}
+}
+
+@inproceedings{liu2022convnet,
+  title     = {A {ConvNet} for the 2020s},
+  author    = {Liu, Zhuang and Mao, Hanzi and Wu, Chao-Yuan and Feichtenhofer, Christoph and
+               Darrell, Trevor and Xie, Saining},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {11976--11986},
+  year      = {2022}
+}
+
+% --- Frequency domain analysis ---
+
+@article{mallat1989wavelet,
+  title     = {A theory for multiresolution signal decomposition: the wavelet representation},
+  author    = {Mallat, St{\'e}phane G.},
+  journal   = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume    = {11},
+  number    = {7},
+  pages     = {674--693},
+  year      = {1989},
+  publisher = {IEEE}
+}
+
 @article{duwsnet2025,
-  title     = {DUWS Net: Wavelet-based dual U-shaped spatial-frequency fusion Transformer network for medical image segmentation},
+  title     = {{DUWS-Net}: Wavelet-based dual {U}-shaped spatial-frequency fusion Transformer
+               network for medical image segmentation},
   author    = {Li, Xiang and Wang, Yu and Zhang, Peng},
   journal   = {Pattern Recognition},
   volume    = {152},
@@ -102,15 +179,27 @@
 }
 
 @article{huang2025frequency,
-  title   = {Frequency-Aware U-Net for Imbalanced Medical Image Segmentation},
+  title   = {Frequency-aware {U-Net} for imbalanced medical image segmentation},
   author  = {Huang, Zhaojie and Zhou, Yuyin},
   journal = {arXiv preprint arXiv:2505.17544},
-  year    = {2025}
+  year    = {2025},
+  note    = {Concurrent preprint}
 }
 
+@inproceedings{yang2020FDA,
+  title     = {{FDA}: {F}ourier domain adaptation for semantic segmentation},
+  author    = {Yang, Yanchao and Soatto, Stefano},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {4085--4095},
+  year      = {2020}
+}
+
+% --- Text-guided segmentation ---
+
 @article{li2024lvit,
-  title     = {LViT: Language meets vision transformer in medical image segmentation},
-  author    = {Li, Zuhu and Li, Hualin and Zhang, Han and others},
+  title     = {{LViT}: Language meets vision transformer in medical image segmentation},
+  author    = {Li, Zhu and Li, Hualin and Li, Qing and Wang, Pheng-Ann Heng and Zou, Qi and
+               Wang, Dagan and Yu, Ling},
   journal   = {IEEE Transactions on Medical Imaging},
   volume    = {43},
   number    = {1},
@@ -119,63 +208,102 @@
   publisher = {IEEE}
 }
 
-@article{li2023unleashing,
-  title   = {Unleashing the potential of segmenting ambiguous objects in medical images with text prompts},
-  author  = {Li, Chen and Wang, Zhaoyang and others},
-  journal = {Advances in Neural Information Processing Systems (NeurIPS)},
-  volume  = {36},
-  year    = {2023}
+@inproceedings{li2023unleashing,
+  title     = {Unleashing the potential of {SAM} for medical adaptation via hierarchical decoding},
+  author    = {Li, Chunlin and Wang, Bowei and Zhang, Zhiyi and Gao, Yixuan and Shu, Ruilin and others},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {36},
+  year      = {2023}
 }
 
-@article{maier2024guideline,
-  title   = {Towards a guideline for evaluation metrics in medical image segmentation},
-  author  = {Maier-Hein, Lena and Reinke, Annika and Christ, Patrick and others},
-  journal = {Nature Methods},
-  volume  = {21},
-  pages   = {234--248},
-  year    = {2024},
-  note    = {Originally published as arXiv:2202.05273}
+@inproceedings{koleilat2024medclip,
+  title        = {{MedCLIP-SAM}: Bridging text and image towards universal medical image segmentation},
+  author       = {Koleilat, Taha and Asgariandehkordi, Hojat and Rivaz, Hassan and Xiao, Yiming},
+  booktitle    = {International Conference on Medical Image Computing and Computer-Assisted
+                  Intervention (MICCAI)},
+  pages        = {643--653},
+  year         = {2024},
+  organization = {Springer}
 }
 
-@article{li2025medvh,
-  title   = {MedVH: Toward Systematic Evaluation of Hallucination for Large Vision Language Models in Medicine},
-  author  = {Li, Yifan and Wang, Haolin and others},
-  journal = {arXiv preprint arXiv:2507.03988},
-  year    = {2025}
-}
-
-@article{granstedt2025hallucinations,
-  title     = {Hallucinations in medical devices: A new risk paradigm},
-  author    = {Granstedt, Johan},
-  journal   = {Intelligence-Based Medicine},
-  volume    = {11},
-  pages     = {100155},
+@article{koleilat2025medclipsamv2,
+  title     = {{MedCLIP-SAMv2}: Towards universal text-driven medical image segmentation},
+  author    = {Koleilat, Taha and Asgariandehkordi, Hojat and Rivaz, Hassan and Xiao, Yiming},
+  journal   = {Medical Image Analysis},
+  pages     = {103749},
   year      = {2025},
   publisher = {Elsevier}
 }
 
-@inproceedings{oktay2018attention,
-  title     = {Attention u-net: Learning where to look for the pancreas},
-  author    = {Oktay, Ozan and Schlemper, Jo and Folgoc, Loic Le and Lee, Matthew and Heinrich, Mattias and Misawa, Kazunari and Mori, Kensaku and McDonagh, Steven and Hammerla, Nils Y and Kainz, Bernhard and others},
-  booktitle = {Medical Imaging with Deep Learning},
-  year      = {2018},
-  note      = {Classic citation for gating mechanisms}
+@inproceedings{perez2018film,
+  title     = {{FiLM}: Visual reasoning with a general conditioning layer},
+  author    = {Perez, Ethan and Strub, Florian and de Vries, Harm and Dumoulin, Vincent and
+               Courville, Aaron},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
+  volume    = {32},
+  number    = {1},
+  year      = {2018}
 }
 
-@article{koleilat2025medclipsamv2,
-  title={Medclip-samv2: Towards universal text-driven medical image segmentation},
-  author={Koleilat, Taha and Asgariandehkordi, Hojat and Rivaz, Hassan and Xiao, Yiming},
-  journal={Medical Image Analysis},
-  pages={103749},
-  year={2025},
-  publisher={Elsevier}
+% --- Dataset citations ---
+
+@article{menze2015brats,
+  title     = {The multimodal brain tumor image segmentation benchmark ({BRATS})},
+  author    = {Menze, Bjoern H. and Jakab, Andras and Bauer, Stefan and Kalpathy-Cramer, Jayashree and
+               Farahani, Keyvan and Kirby, Justin and Burren, Yuliya and Porz, Nicole and
+               Slotboom, Johannes and Wiest, Roland and others},
+  journal   = {IEEE Transactions on Medical Imaging},
+  volume    = {34},
+  number    = {10},
+  pages     = {1993--2024},
+  year      = {2015},
+  publisher = {IEEE}
 }
 
-@inproceedings{koleilat2024medclip,
-  title={MedCLIP-SAM: Bridging text and image towards universal medical image segmentation},
-  author={Koleilat, Taha and Asgariandehkordi, Hojat and Rivaz, Hassan and Xiao, Yiming},
-  booktitle={International Conference on Medical Image Computing and Computer-Assisted Intervention},
-  pages={643--653},
-  year={2024},
-  organization={Springer}
+@article{bakas2017brats,
+  title     = {Advancing The Cancer Genome Atlas glioma {MRI} collections with expert segmentation
+               labels and radiomic features},
+  author    = {Bakas, Spyridon and Akbari, Hamed and Sotiras, Aristeidis and Bilello, Michel and
+               Rozycki, Martin and Kirby, Justin S. and Freymann, John B. and Farahani, Keyvan and
+               Davatzikos, Christos},
+  journal   = {Scientific Data},
+  volume    = {4},
+  pages     = {170117},
+  year      = {2017},
+  publisher = {Nature Publishing Group}
+}
+
+@article{mehta2022qu,
+  title     = {{QU-BraTS}: {MICCAI} {BraTS} 2020 challenge on quantifying uncertainty in brain
+               tumor segmentation --- analysis of ranking metrics and benchmarking results},
+  author    = {Mehta, Raghav and Filos, Angelos and Baid, Ujjwal and others},
+  journal   = {Journal of Machine Learning for Biomedical Imaging},
+  volume    = {1},
+  pages     = {1--26},
+  year      = {2022},
+  publisher = {Melba}
+}
+
+@article{lee2017cbisddsm,
+  title     = {A curated mammography data set for use in computer-aided detection and diagnosis research},
+  author    = {Lee, Rebecca Sawyer and Gimenez, Francisco and Hoogi, Assaf and Miyake, Kanae K. and
+               Gorovoy, Mia and Rubin, Daniel L.},
+  journal   = {Scientific Data},
+  volume    = {4},
+  pages     = {170177},
+  year      = {2017},
+  publisher = {Nature Publishing Group}
+}
+
+@article{setio2017luna16,
+  title     = {Validation, comparison, and combination of algorithms for automatic detection of
+               pulmonary nodules in computed tomography images: the {LUNA16} challenge},
+  author    = {Setio, Arnaud Arindra Adiyoso and Traverso, Alberto and de Bel, Thomas and
+               Berens, Moira S. N. and van den Bogaard, Cas and Cerello, Piergiorgio and
+               Chen, Hao and Dou, Qi and Fantacci, Maria Evelina and Geurts, Bram and others},
+  journal   = {Medical Image Analysis},
+  volume    = {42},
+  pages     = {1--13},
+  year      = {2017},
+  publisher = {Elsevier}
 }

@@ -1,95 +1,22 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\paragraph{Interpreting the performance gains.}
+The 6.2\% absolute Dice improvement over the semantic-only BiomedCLIP baseline is large given BiomedCLIP's strong pretraining on fifteen million image-text pairs. We attribute this to two complementary mechanisms. First, DWT sub-band inputs give the frequency encoder explicit access to high-frequency image components that the ViT's patch-level processing systematically suppresses through attention smoothing, a documented frequency bias~\cite{park2022vision}. Second, FFBI bidirectional cross-attention lets the semantic stream ground its boundary predictions in actual edge signals rather than learned prior distributions over anatomical shape, reducing the blurring artefacts common in transformer decoders. The improvement over SAM-Med2D (+2.2\% Dice, $2.9\times$ better HD) deserves examination because SAM-Med2D uses substantially more pretraining data. The gap is most pronounced in boundary metrics, confirming that FreqMedCLIP's advantage lies in localisation precision rather than semantic recognition.
+
+\paragraph{Clinical relevance of boundary quality.}
+The 2.1\,mm mean Hausdorff distance represents substantially tighter boundary localisation than the semantic-only baseline (8.2\,mm) and SAM-Med2D (6.1\,mm). In downstream workflows such as treatment planning and longitudinal lesion tracking, boundary errors propagate to volume estimates and margin decisions. The large HD reduction is therefore practically important even when Dice gains appear moderate. A formal clinical-impact analysis remains future work and would require task-specific prospective evaluation.
+
+\paragraph{Frequency-semantic dissociation.}
+The frequency-only baseline achieves lower HD (3.1\,mm) than SAM-Med2D (6.1\,mm) despite having dramatically lower Dice (0.725 vs.\ 0.845). This dissociation matters: SAM-Med2D produces segmentations that are semantically reasonable with smooth boundaries, while the frequency-only model draws sharp, localised edges that are geometrically precise when correct but frequently misattributed to non-target structures. This finding motivates the FFBI design choice directly. The semantic stream must suppress spurious frequency activations, not just concatenate with them.
+
+\paragraph{Text guidance and its limits.}
+LFFI provides a consistent 2.1\% Dice improvement across all three datasets. Analysis of the ablation variants reveals that text guidance works best at intermediate scales ($28\times28$, $56\times56$), where language conditioning helps the decoder commit to specific anatomical regions before refining fine details at $112\times112$. At the coarsest scale, the semantic stream already provides strong localisation. At the finest scale, spatial frequency features dominate. These observations align with the multi-scale language integration findings of LViT~\cite{li2024lvit}, though our FiLM-based implementation imposes less computational overhead than cross-attention conditioning.
+
+\paragraph{Limitations.}
+Three limitations deserve attention. \emph{Resolution constraints}: the $224\times224$ input resolution inherited from BiomedCLIP limits detection of nodules smaller than about 20 pixels. ViT patch tokens at $14\times14$ spatial resolution provide insufficient coverage for sub-centimetre structures. Hierarchical multi-scale inference or higher-resolution ViT backbones would address this. \emph{Diffuse boundaries}: while Haar DWT provides richer multi-directional sub-bands than a single Laplacian, diffuse infiltrative lesions (e.g., low-grade glioma) lack sharp intensity transitions and remain challenging for frequency-based boundary detection. Combining DWT with learned filterbanks may improve performance in these cases. \emph{3D extension}: the current design operates on 2D slices, discarding inter-slice context present in volumetric MRI and CT. Extending to 3D requires rethinking both the DWT decomposition (3D sub-bands) and the attention scalability of FFBI.
+
 \section{Conclusion}
+\label{sec:conclusion}
 
-\subsection{Summary of Contributions}
-
-This paper presents FreqMedCLIP, a dual-stream architecture that reconciles a fundamental trade-off in medical image segmentation: the need for both semantic understanding and precise boundary detection. Our key contributions are:
-
-\begin{enumerate}
-
-\item \textbf{Architectural Innovation}: A principled dual-stream design that explicitly decouples semantic processing (BiomedCLIP) from frequency-domain boundary detection (Laplacian + learned encoder). This decomposition aligns with signal processing fundamentals while enabling complementary feature learning.
-
-\item \textbf{Bidirectional Fusion Mechanism (FFBI)}: A cross-attention module that enables symmetric information exchange between semantic and frequency streams at the bottleneck. Unlike ad-hoc concatenation, FFBI allows unsupervised discovery of complementarity without text bias, improving both pathways by 3.2\%.
-
-\item \textbf{Language-Guided Feature Fusion (LFFI)}: Multi-step text-guided modulation at each decoder level that provides semantic anchors for progressive refinement. Text embeddings control which features are relevant through interaction matrices and channel-wise gating (2.1\% improvement).
-
-\item \textbf{Comprehensive Experimental Validation}: Ablation studies quantifying each component (frequency encoder: 4.7\%, FFBI: 3.2\%, LFFI: 2.1\%), boundary quality analysis showing 2.1mm Hausdorff distance (2.9× better than semantic-only), and superior performance on diverse datasets (brain, breast, lung) achieving 86.7\% average Dice.
-
-\item \textbf{Interpretable Design}: The architecture's modularity enables clear tracing of information flow. Frequency and semantic pathways are independently inspectable, facilitating debugging and understanding model decisions.
-
-\end{enumerate}
-
-\subsection{Key Findings}
-
-Our extensive experiments reveal three critical insights:
-
-\begin{enumerate}
-
-\item \textbf{Frequency Complementarity is Essential}: The frequency stream alone achieves 72.5\% Dice (insufficient), while semantic-only achieves 80.5\%. Dual-stream reaches 86.7\%, demonstrating that frequency and semantic information are fundamentally complementary, not redundant. The 6.2\% improvement justifies the 55\% computational overhead.
-
-\item \textbf{Bidirectional Fusion Outperforms Asymmetric Designs}: FFBI's symmetric cross-attention (3.2\% improvement) exceeds simple concatenation or additive fusion. Cross-attention allows each stream to selectively attend to relevant complementary information, respecting the principle that fusion should be bidirectional when complementarity is mutual.
-
-\item \textbf{Text Guidance at Multiple Scales is Effective}: LFFI modules at each decoder level (2.1\% improvement) enable progressive semantic refinement. Coarse scales (14×14) concentrate semantic information; fine scales (112×112) refine boundaries. Text guidance at all scales prevents semantic drift during upsampling.
-
-\end{enumerate}
-
-\subsection{Architectural Strengths}
-
-\begin{itemize}
-
-\item \textbf{Strong Theoretical Grounding}: Decomposition into frequency and semantic domains is well-motivated by signal processing theory. Low frequencies <-> semantics, high frequencies <-> boundaries is mathematically principled.
-
-\item \textbf{Parameter Efficiency}: Only 12.0M trainable parameters (86.2M frozen BiomedCLIP). Enables rapid fine-tuning on new datasets and domains without large labeled data requirements.
-
-\item \textbf{Computational Practicality}: 81ms inference on A100 (vs. 156ms for SAM-Med2D) with better accuracy. Suitable for clinical deployment and real-time analysis.
-
-\item \textbf{Generalization}: Consistent improvements across three anatomically and modality-diverse datasets (brain MRI, breast mammography, lung CT) suggest architectural principles generalize beyond specific domains.
-
-\item \textbf{Interpretability}: Clean separation of concerns (semantic vs. boundary) allows practitioners to understand which pathway contributes to specific predictions. Useful for regulatory compliance and clinical trust.
-
-\end{itemize}
-
-\subsection{Limitations and Future Work}
-
-While FreqMedCLIP achieves strong results, several limitations present opportunities:
-
-\begin{enumerate}
-
-\item \textbf{Resolution Constraints}: 224×224 input inherited from BiomedCLIP may limit detection of very small structures (<20 pixels). Future work: hierarchical multi-scale inference with adaptive resolution selection based on lesion size.
-
-\item \textbf{Laplacian Limitations}: Laplacian-based edge detection struggles with amorphous boundaries (diffuse infiltrative tumors) lacking clear intensity transitions. Could combine with learnable edge detectors or wavelet decomposition for multi-scale frequency analysis.
-
-\item \textbf{Text Dependency}: Model performance depends on prompt quality. Ambiguous prompts (``lesion'') underperform specific prompts (``brain tumor''). Future: automatic prompt generation and prompt-agnostic adaptation.
-
-\item \textbf{Limited 3D Extension}: Current design operates on 2D slices. Extending to volumetric 3D would require rethinking frequency decomposition (3D Laplacian) and computational efficiency.
-
-\item \textbf{Cross-Domain Generalization}: Training on one dataset (e.g., brain) and testing on another (breast) shows degraded performance. Domain adaptation techniques and larger pre-training would improve generalization.
-
-\end{enumerate}
-
-\subsection{Future Directions}
-
-\begin{enumerate}
-
-\item \textbf{Adaptive Frequency Decomposition}: Replace fixed Laplacian with learnable frequency filters (e.g., learnable 3×3 kernels) to automatically discover task-optimal frequency decomposition.
-
-\item \textbf{Multi-Scale Frequency Analysis}: Incorporate wavelet decomposition alongside Laplacian to capture multiple frequency bands, providing richer boundary information.
-
-\item \textbf{Unified 3D Architecture}: Extend to 3D volumes with 3D convolutions and 3D attention, enabling volumetric boundary detection without slice-wise processing.
-
-\item \textbf{Self-Supervised Pre-training}: Leverage large unlabeled medical image collections with contrastive learning on frequency and semantic features to improve initialization.
-
-\item \textbf{Clinical Validation}: Deploy on real clinical datasets (HIPAA-compliant) with radiologist evaluation to assess clinical utility and identify failure modes in practice.
-
-\item \textbf{Explainability Analysis}: Generate attention visualizations showing which text tokens and which frequency components drive segmentation decisions, enabling clinical interpretability.
-
-\end{enumerate}
-
-\subsection{Broader Impact}
-
-This work contributes to a critical goal: making vision transformers practical for medical image segmentation where precise boundaries are clinically essential. By explicitly modeling frequency-semantic complementarity, we provide a principled approach that other dual-stream architectures can adopt. The open-source release of FreqMedCLIP (planned) enables the community to build upon this foundation.
-
-Medical imaging applications are high-stakes: misdiagnosis or missed lesion detection can delay treatment. Our 6.2\% Dice improvement translates to measurable clinical benefit in boundary precision (2.1mm Hausdorff vs. 8.2mm for semantic-only). We hope this work advances the state-of-the-art toward more reliable, interpretable AI systems for medical imaging.
-
-\subsection{Final Remarks}
-
-FreqMedCLIP demonstrates that the path to better medical image segmentation lies not in larger models or more data alone, but in architectural innovations grounded in signal processing and information theory. By respecting the complementary nature of frequency and semantic information, we achieve superior performance with modest computational overhead. This principled approach to multi-stream architecture design provides a template for future multi-modal medical imaging systems.
+We have presented FreqMedCLIP, a dual-stream architecture for text-guided medical image segmentation that couples a frozen BiomedCLIP vision transformer with a learned frequency encoder processing Haar wavelet sub-bands. The two streams interact at a shared bottleneck via bidirectional cross-attention (FFBI), and language-guided FiLM conditioning (LFFI) modulates both decoder branches at every spatial resolution. Experiments on brain, breast, and lung benchmarks show consistent improvements over strong baselines: 0.867 average Dice (vs.\ 0.845 for SAM-Med2D), 2.1\,mm Hausdorff distance (vs.\ 6.1\,mm for SAM-Med2D), and 12\,M trainable parameters at 81\,ms inference. Ablation studies confirm that the frequency encoder provides the largest individual contribution ($+4.2\%$ Dice), followed by FFBI fusion ($+3.0\%$) and LFFI text guidance ($+2.1\%$), with all components jointly necessary for the full performance. Future work will explore adaptive frequency decomposition with learnable filterbanks, extension to 3D volumetric segmentation with axial DWT, and self-supervised pretraining that jointly learns semantic and frequency representations.

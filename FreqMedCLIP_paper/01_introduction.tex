@@ -1,67 +1,19 @@
 \section{Introduction}
 
-Medical image segmentation is a foundational task in clinical diagnosis, treatment planning, and disease monitoring. While convolutional neural networks (CNNs) established strong baselines for segmentation, vision transformers (ViTs) have demonstrated superior performance on large-scale natural image datasets through their ability to capture long-range dependencies and global semantic relationships. In medical imaging, BiomedCLIP~\cite{wang2023biomedclip} represents a significant advance, providing a foundation model pretrained on multimodal medical data (images and text) that can be fine-tuned for downstream segmentation tasks.
+Medical image segmentation underpins clinical workflows from tumor delineation to organ-at-risk contouring and lesion monitoring~\cite{litjens2017survey}. The task is dual in nature: a model must \emph{recognise} what it segments, establishing semantic correspondence between image regions and anatomical categories, and \emph{locate} the precise spatial extent of those structures, including fine boundary details that carry direct clinical weight. These two demands engage different parts of the image signal. Semantic recognition depends on long-range contextual cues and global intensity distributions. Boundary delineation requires sensitivity to local high-frequency transitions at tissue interfaces.
 
-However, current transformer-based approaches exhibit a fundamental limitation: while excelling at semantic understanding, they are ill-suited for precise boundary localization. Transformers operate on patches with fixed receptive fields and typically produce smooth, low-frequency attention maps optimized for global feature aggregation. This semantic bias causes transformers to capture coarse anatomical structures effectively but struggle with fine-grained boundaries, where local texture and edge information become critical.
+Convolutional architectures, led by U-Net~\cite{ronneberger2015u} and its descendants~\cite{isensee2021nnunet,oktay2018attention}, address this tension through hierarchical feature representations and skip connections. The inductive biases of convolution, however, limit capacity to model the global context needed to distinguish, for example, a necrotic tumor core from surrounding oedema in a glioma scan. Vision transformers (ViTs) replace local convolutions with self-attention over image patches~\cite{dosovitskiy2020image}, enabling long-range dependency modelling. Hybrid designs such as TransUNet~\cite{chen2024transunet} combine both paradigms. Foundation models built on ViT pretraining, including SAM~\cite{kirillov2023segment} and its medical adaptations~\cite{ma2024medsam}, as well as BiomedCLIP~\cite{zhang2025biomedclip}, have shown strong zero-shot and few-shot segmentation. Text-image alignment through CLIP-style training~\cite{radford2021learning}, extended by LViT~\cite{li2024lvit} and MedCLIP-SAM~\cite{koleilat2024medclip}, lets models condition segmentation on natural-language descriptions of the target structure.
 
-\subsection{Core Problem: Semantic-Boundary Trade-off}
+Yet transformer-based architectures inherit a systematic weakness: their patch-level operation and attention smoothing suppress high-frequency image components that delineate anatomical boundaries. Attention maps across deep ViT layers tend toward low spatial frequency, capturing coarse layouts rather than boundary topology~\cite{park2022vision}. The result is segmentations that correctly identify the gross location of a structure but yield blurred or misaligned boundaries, inflating boundary-sensitive metrics such as Hausdorff distance. Frequency-domain methods have long been used for edge detection. Wavelet decomposition, Fourier analysis, and Laplacian operators all isolate high-frequency content~\cite{mallat1989wavelet}. They lack the semantic context, though, to distinguish meaningful anatomical boundaries from imaging noise or tissue texture.
 
-Medical image segmentation requires two complementary capabilities:
-\begin{enumerate}
-\item \textbf{Semantic Understanding}: Recognizing what anatomical structure to segment (e.g., distinguishing tumor from healthy tissue)
-\item \textbf{Precise Boundaries}: Locating exact spatial extent of the structure with high accuracy
-\end{enumerate}
+This paper asks whether a single architecture can achieve strong semantic segmentation \emph{and} reliable boundary localisation by explicitly coupling the complementary strengths of semantic and frequency pathways. We answer yes with \textit{FreqMedCLIP}, a dual-stream architecture that pairs a frozen BiomedCLIP vision encoder with a learned frequency encoder operating on Haar wavelet sub-bands. The two streams interact at a shared bottleneck through bidirectional cross-attention (FFBI), and text embeddings derived from natural-language prompts modulate both decoder branches via FiLM conditioning at each spatial scale. The design rests on a signal-processing principle: low-frequency components encode global semantic structure while high-frequency components encode edges and fine detail. Fusing both under language guidance yields representations that are simultaneously semantically grounded and boundary-aware. On three diverse benchmarks (brain, breast, and lung segmentation), FreqMedCLIP achieves 0.867 average Dice coefficient and 2.1\,mm mean Hausdorff distance, compared with 0.845 Dice and 6.1\,mm HD for SAM-Med2D.
 
-Traditional approaches handle these through architectural design (U-Net with skip connections) or loss functions (Dice vs. CE weighting). However, they operate in a single domain (spatial). We observe that these two tasks engage different frequency components of images:
-\begin{itemize}
-\item \textbf{Low frequencies} (semantic): Global structure, tissue types, anatomical relationships
-\item \textbf{High frequencies} (boundaries): Edges, transitions, fine-grained texture details
-\end{itemize}
-
-Vision transformers naturally capture low frequencies (global context) but suppress high frequencies (local discontinuities) through attention mechanisms optimized for smoothness. This architectural bias directly contradicts boundary detection requirements.
-
-\subsection{Proposed Solution: Dual-Stream Frequency-Aware Architecture}
-
-We propose \textit{FreqMedCLIP}, a dual-stream architecture that explicitly decouples semantic and boundary understanding into separate pathways:
-
-\begin{itemize}
-\item \textbf{Semantic Stream}: BiomedCLIP vision transformer (frozen pre-trained backbone) for global semantic context
-\item \textbf{Frequency Stream}: Lightweight learned encoder operating on Laplacian (high-frequency) images for boundary details
-\item \textbf{Bidirectional Fusion}: FFBI module enables symmetric information exchange, allowing semantic features to learn from boundaries and vice versa
-\item \textbf{Text-Guided Integration}: LFFI modules at each decoder level inject text-based semantic guidance into both streams simultaneously
-\end{itemize}
-
-This design philosophy rests on three key insights:
+The principal contributions of this paper are:
 
 \begin{enumerate}
-\item \textbf{Frequency Complementarity}: Semantic and frequency domains capture non-overlapping information; their fusion outperforms either alone
-\item \textbf{Bidirectional Learning}: Without forced asymmetry, both pathways mutually enhance through cross-attention
-\item \textbf{Unified Text Guidance}: Language prompts provide semantic anchors that guide which frequency components are relevant for a given segmentation task
+    \item \textbf{A dual-stream frequency-semantic architecture.} We couple a pretrained biomedical vision transformer with a ConvNeXt-based frequency encoder fed on one-level Haar DWT sub-bands. The frequency front-end gives computationally efficient, theoretically grounded access to directional edge information that the ViT systematically suppresses. On three benchmarks, the dual-stream design improves average Dice by 6.2\% over the semantic-only baseline and reduces Hausdorff distance from 8.2\,mm to 2.1\,mm.
+
+    \item \textbf{Bidirectional frequency-feature bridging integration (FFBI).} A bottleneck cross-attention module that enables symmetric information exchange between the semantic and frequency streams. Each stream selectively queries the other for complementary information, yielding representations that neither could produce alone. FFBI contributes 3.0\% absolute Dice improvement over concatenation-based fusion in ablation studies.
+
+    \item \textbf{Language-guided feature fusion via FiLM modulation (LFFI).} Text embeddings from the BiomedCLIP language encoder modulate both decoder branches at every spatial resolution ($14\!\to\!28\!\to\!56\!\to\!112$), providing progressive semantic guidance that prevents semantic drift during upsampling. LFFI contributes 2.1\% Dice improvement and is most effective at intermediate decoder scales.
 \end{enumerate}
-
-\subsection{Architectural Contributions}
-
-The core contributions of FreqMedCLIP are:
-
-\begin{enumerate}
-\item \textbf{Text-Guided Frequency Encoder} (Section 3.3): A learned encoder that extracts high-frequency information from Laplacian images with channel-wise text-modulated attention (TextGuidedSEBlocks), enabling language-driven frequency feature importance weighting.
-
-\item \textbf{Bidirectional Fusion Module (FFBI)} (Section 3.4): A cross-attention mechanism that enables symmetric information exchange between semantic and frequency streams without text interference, allowing both pathways to learn complementary representations.
-
-\item \textbf{Dual-Path Decoder with Language-Guided Feature Fusion (LFFI)} (Section 3.5): Progressive text-guided refinement at multiple decoder scales (14→28→56→112 spatial resolutions), where text embeddings modulate both branches simultaneously through interaction matrices and gating mechanisms.
-
-\item \textbf{Principled Frequency Decomposition} (Section 3.3): Use of Laplacian operator (instead of wavelets) for computational efficiency while maintaining interpretability; frequency analysis grounded in signal processing theory.
-
-\item \textbf{Empirical Validation}: Comprehensive ablation studies (Table 2) quantifying the contribution of each component (FFBI: +3.2\%, LFFI: +2.1\%, frequency encoder: +4.7\% boundary improvement).
-\end{enumerate}
-
-\subsection{Paper Organization}
-
-The remainder of this paper is organized as follows:
-\begin{itemize}
-\item \textbf{Section 2} reviews related work on vision transformers in medical imaging, multi-stream architectures, and frequency-domain analysis
-\item \textbf{Section 3} provides detailed technical exposition of FreqMedCLIP architecture with complete forward pass analysis
-\item \textbf{Section 4} describes experimental setup including datasets, metrics, and training procedure
-\item \textbf{Section 5} presents quantitative results with architectural ablations and qualitative analysis
-\item \textbf{Section 6} concludes with summary of contributions and future directions
-\end{itemize}
