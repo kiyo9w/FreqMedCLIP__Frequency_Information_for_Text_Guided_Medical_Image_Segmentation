@@ -1,0 +1,23 @@
+\section{Related Work}
+
+\subsection{Vision Transformers in Medical Image Analysis}
+
+Vision transformers have emerged as powerful alternatives to convolutional neural networks for image understanding tasks. The original Vision Transformer (ViT)~\cite{dosovitskiy2020image} demonstrates that pure transformer architectures can match or exceed CNN performance when trained on sufficient data. In medical imaging, foundation models like BiomedCLIP~\cite{wang2023biomedclip} leverage multimodal pretraining (images paired with text) to learn rich semantic representations. These models excel at capturing global anatomical context and semantic relationships, making them particularly valuable for understanding what to segment. However, transformers inherently operate at the patch level (e.g., 16×16 pixels), which may suppress fine-grained boundary information critical for precise segmentation.
+
+\subsection{Multi-Stream and Fusion Architectures}
+
+Multi-stream architectures decompose tasks into complementary pathways, each specialized for different aspects of the problem. U-Net~\cite{ronneberger2015u} pioneered encoder-decoder design with skip connections, but operates as a single semantic stream. DenseNet and ResNet variants introduce dense connections for better feature propagation. Recent multi-stream approaches include dual-pathway networks for 3D segmentation~\cite{isensee2021nnunet} and multi-scale feature hierarchies. However, most fusion strategies employ simple concatenation or addition, lacking principled interaction mechanisms. We propose FFBI (Frequency Fusion Branch Interaction), which uses cross-attention for bidirectional symmetric information exchange, enabling each stream to selectively attend to complementary information from the other.
+
+\subsection{Frequency Domain Analysis in Image Processing}
+
+Frequency domain analysis has long been fundamental in signal processing for understanding image structure. The Discrete Fourier Transform and wavelet decomposition separate images into frequency bands, where low frequencies encode global structure and high frequencies encode edges and boundaries. Traditional applications include edge detection (Sobel, Laplacian), texture analysis~\cite{lambin2012radiomics}, and image enhancement. In deep learning, frequency analysis has reemerged for robustness studies~\cite{wang2022frequency,yang2020FDA}, showing that networks exhibit frequency biases. We leverage this insight by explicitly incorporating frequency information through high-frequency image decomposition, allowing the network to learn when and how to utilize boundary details.
+
+\subsection{Text-Guided and Multi-Modal Image Segmentation}
+
+Text guidance provides semantic anchors for image understanding, enabling more interpretable and controllable segmentation. CLIP~\cite{radford2021learning} established text-image alignment at scale, subsequently adapted for medical imaging via BiomedCLIP. Recent works like SAM~\cite{kirillov2023segment} demonstrate the power of language-guided vision models. In segmentation, text can condition the model on specific anatomical structures (``brain tumor'', ``necrotic core''), enabling single models to segment multiple structures without architecture changes. Our approach integrates text guidance at multiple decoder levels through LFFI modules, using text embeddings to modulate which frequency components are relevant for a given task—a novel form of semantic control over frequency processing.
+
+\subsection{Loss Functions and Training Strategies for Segmentation}
+
+Segmentation requires balancing pixel-level accuracy with structural correctness. Dice loss~\cite{milletari2016dice} addresses class imbalance by measuring overlap, while cross-entropy loss provides per-pixel classification gradients. Recent advances like Focal Loss~\cite{lin2017focal} and contrastive learning approaches~\cite{chen2020simple} improve training dynamics. We employ a multi-task loss combining Dice (structural correctness), BCE (pixel calibration), and hard-negative contrastive learning (semantic alignment), optimized with AdamW following modern best practices.
+
+This related work positions FreqMedCLIP as a synthesis of three key insights: (1) vision transformers capture semantics effectively, (2) frequency information is complementary and interpretable, (3) text guidance enables semantic control. Our architecture bridges these domains through principled fusion and language-guided feature modulation.

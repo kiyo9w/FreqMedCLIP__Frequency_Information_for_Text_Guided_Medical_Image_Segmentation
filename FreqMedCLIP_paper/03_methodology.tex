@@ -1,0 +1,295 @@
+\section{Proposed Method}
+\label{sec:method}
+
+\subsection{Overview}
+\label{subsec:overview}
+
+We propose a dual-stream text-guided medical image segmentation framework that disentangles
+(i) \emph{global semantic understanding} and (ii) \emph{frequency-driven boundary cues}, then couples them
+through a bottleneck interaction module and a dual-decoder design.
+Given an input image $\mathbf{I}\in\mathbb{R}^{H\times W\times C}$ and a text prompt $p$, the model predicts
+a binary mask $\mathbf{M}\in[0,1]^{H\times W}$.
+
+\begin{figure*}[t]
+    \centering
+    % --- Replace the placeholder below with your PDF architecture figure ---
+    \includegraphics[width=\textwidth]{Arch.png}
+    \caption{\textbf{Architecture overview.}
+    The model consists of (1) a BioMedCLIP ViT semantic encoder with an FPN adapter (top),
+    (2) a DWT-Haar + ConvNeXt-Tiny frequency encoder (bottom),
+    (3) a bottleneck fusion block (FFBI),
+    (4) two symmetric text-conditioned decoders, and (5) a fusion head for final mask prediction.
+    (For clarity, we omit optional text-conditioned adapters inside the ViT encoder; see Sec.~\ref{subsec:tca}.)}
+    \label{fig:arch}
+\end{figure*}
+
+\paragraph{Pipeline summary.}
+The overall computation is:
+\begin{equation}
+\mathbf{S}_{1:4} = \mathrm{FPN}\big(\mathrm{SemEnc}(\mathbf{I},p)\big),\quad
+\mathbf{F}_{\mathrm{stem},1:3} = \mathrm{FreqEnc}(\mathrm{DWT}(\mathbf{I})),
+\quad [\hat{\mathbf{S}}_1,\hat{\mathbf{F}}_3] = \mathrm{FFBI}(\mathbf{S}_1,\mathbf{F}_3),
+\end{equation}
+\begin{equation}
+\mathbf{L}_s=\mathrm{Dec}_s(\hat{\mathbf{S}}_1,\mathbf{S}_{2:4},p),\quad
+\mathbf{L}_f=\mathrm{Dec}_f(\hat{\mathbf{F}}_3,\mathbf{F}_{\mathrm{stem},1:2},p),\quad
+\mathbf{M}=\sigma\Big(\mathrm{Fuse}(\mathbf{L}_s,\mathbf{L}_f)\Big).
+\end{equation}
+
+\paragraph{Notation.}
+The prompt $p$ is encoded into token embeddings $\mathbf{T}\in\mathbb{R}^{L\times d_t}$ and a pooled embedding
+$\bar{\mathbf{t}}\in\mathbb{R}^{d_t}$. For a feature map $\mathbf{X}\in\mathbb{R}^{C\times h\times w}$,
+$\mathrm{flat}(\mathbf{X})\in\mathbb{R}^{(hw)\times C}$ denotes spatial flattening into tokens.
+
+\subsection{Input Processing}
+\label{subsec:input}
+
+We resize each image to $224\times224$ for the ViT-based semantic encoder (consistent with CLIP-style training),
+and normalize intensities per modality (e.g., z-score for MRI or min-max for CT). The predicted mask is finally
+rescaled to the original resolution using bilinear interpolation.
+
+\subsection{Text Encoder}
+\label{subsec:text}
+
+We encode the prompt using the BioMedCLIP text encoder:
+\begin{equation}
+\mathbf{T} = \mathrm{TextEnc}(\mathrm{tokenize}(p)) \in \mathbb{R}^{L\times d_t},\qquad
+\bar{\mathbf{t}}=\mathrm{Pool}(\mathbf{T})\in\mathbb{R}^{d_t},
+\end{equation}
+where $\mathrm{Pool}(\cdot)$ can be mean pooling or the special end token (implementation-dependent).
+We reuse $\mathbf{T}$ for token-level cross-modal interaction, and $\bar{\mathbf{t}}$ for lightweight FiLM modulation.
+
+\subsection{Semantic Stream: BioMedCLIP ViT + FPN Adapter}
+\label{subsec:semantic}
+
+\subsubsection{Multi-layer ViT feature extraction (layers 12/9/6/3)}
+\label{subsubsec:vit}
+
+The BioMedCLIP vision transformer processes $\mathbf{I}$ and returns hidden states
+$\{\mathbf{H}^{(\ell)}\}_{\ell=0}^{12}$. We extract four layers $\ell\in\{12,9,6,3\}$ (deep-to-shallow)
+and remove the class token:
+\begin{equation}
+\mathbf{F}^{(\ell)} = \left(\mathbf{H}^{(\ell)}\right)_{1:} \in \mathbb{R}^{N\times d_v},\quad
+N=14^2,\ d_v=768,
+\end{equation}
+then reshape them to spatial grids:
+\begin{equation}
+\mathbf{U}^{(\ell)} = \mathrm{reshape}\left(\mathbf{F}^{(\ell)}\right)\in\mathbb{R}^{d_v\times 14\times 14}.
+\end{equation}
+
+\subsubsection{Text-conditioned interaction inside the visual encoder (TCA)}
+\label{subsec:tca}
+
+To enable earlier text--vision interaction (beyond decoder-only conditioning), we insert lightweight
+\textbf{T}ext-\textbf{C}onditioned \textbf{A}dapters (TCA) into selected transformer blocks of the ViT
+(e.g., after layers $\{3,6,9,12\}$). This mechanism is optional and is not drawn in Fig.~\ref{fig:arch}
+to keep the diagram compact.
+
+Let $\mathbf{X}^{(\ell)}\in\mathbb{R}^{N\times d_v}$ denote the image token sequence at layer $\ell$
+(after removing the class token). TCA performs token-level cross-attention from image tokens to text tokens:
+\begin{equation}
+\mathbf{X}^{(\ell)}_{\text{ca}} =
+\mathbf{X}^{(\ell)} + \mathrm{CA}\big(\mathbf{X}^{(\ell)}\mathbf{W}_Q,\ \mathbf{T}\mathbf{W}_K,\ \mathbf{T}\mathbf{W}_V\big),
+\end{equation}
+followed by a small feed-forward network (FFN) with residual:
+\begin{equation}
+\mathbf{X}^{(\ell)}_{\text{tca}} = \mathbf{X}^{(\ell)}_{\text{ca}} + \mathrm{FFN}\big(\mathrm{LN}(\mathbf{X}^{(\ell)}_{\text{ca}})\big).
+\end{equation}
+We then pass $\mathbf{X}^{(\ell)}_{\text{tca}}$ to subsequent transformer layers.
+This yields text-adaptive semantic representations while keeping parameter overhead small (only the adapter projections).
+
+\paragraph{Efficiency note.}
+If full cross-attention is too costly, TCA can be instantiated as FiLM-on-tokens:
+\begin{equation}
+[\boldsymbol{\gamma}^{(\ell)},\boldsymbol{\beta}^{(\ell)}] = \mathrm{MLP}^{(\ell)}(\bar{\mathbf{t}}),\qquad
+\mathbf{X}^{(\ell)}_{\text{tca}} = \boldsymbol{\gamma}^{(\ell)}\odot \mathbf{X}^{(\ell)} + \boldsymbol{\beta}^{(\ell)},
+\end{equation}
+which preserves early interaction while avoiding $O(NL)$ attention.
+
+\subsubsection{FPNAdapter: semantic pyramid $\mathbf{S}_1\!\rightarrow\!\mathbf{S}_4$}
+\label{subsubsec:fpn}
+
+Since ViT features are isotropic ($14\times14$), we construct a 4-level pyramid using an FPN-style adapter.
+The bottleneck level is kept at $14\times14$, while higher-resolution levels are obtained by progressive $2\times$
+upsampling with lateral fusion:
+\begin{equation}
+\begin{aligned}
+\mathbf{S}_1 &= \phi_{12}(\mathbf{U}^{(12)}) \in \mathbb{R}^{C_1\times 14\times 14}, \\
+\mathbf{S}_2 &= \phi_{9}\Big(\mathrm{Up}_2(\mathbf{S}_1) \oplus \psi_{9}(\mathbf{U}^{(9)})\Big)
+\in \mathbb{R}^{C_2\times 28\times 28}, \\
+\mathbf{S}_3 &= \phi_{6}\Big(\mathrm{Up}_2(\mathbf{S}_2) \oplus \psi_{6}(\mathbf{U}^{(6)})\Big)
+\in \mathbb{R}^{C_3\times 56\times 56}, \\
+\mathbf{S}_4 &= \phi_{3}\Big(\mathrm{Up}_2(\mathbf{S}_3) \oplus \psi_{3}(\mathbf{U}^{(3)})\Big)
+\in \mathbb{R}^{C_4\times 112\times 112}.
+\end{aligned}
+\end{equation}
+Here $\mathrm{Up}_2$ is $2\times$ bilinear upsampling, $\oplus$ denotes concatenation,
+$\psi_\ell$ are $1\times1$ projections (channel alignment), and $\phi_\ell$ are $3\times3$ refinements.
+$\mathbf{S}_1$ is fed to FFBI, and $\mathbf{S}_{2:4}$ are used as skip connections for the semantic decoder.
+
+\subsection{Frequency Stream: DWT-Haar + ConvNeXt-Tiny}
+\label{subsec:frequency}
+
+\subsubsection{Haar DWT decomposition}
+\label{subsubsec:dwt}
+
+We apply a one-level 2D discrete wavelet transform (Haar) to explicitly separate low- and high-frequency cues:
+\begin{equation}
+[\mathbf{I}_{LL},\mathbf{I}_{LH},\mathbf{I}_{HL},\mathbf{I}_{HH}] = \mathrm{DWT}_{\mathrm{Haar}}(\mathbf{I}).
+\end{equation}
+$LL$ preserves coarse anatomy, while $LH/HL/HH$ emphasize directional edges and fine details.
+We stack sub-bands as channels to form the frequency input:
+\begin{equation}
+\mathbf{I}_{\mathrm{dwt}}=\mathrm{concat}(\mathbf{I}_{LL},\mathbf{I}_{LH},\mathbf{I}_{HL},\mathbf{I}_{HH}).
+\end{equation}
+
+\subsubsection{ConvNeXt-Tiny frequency encoder pyramid}
+\label{subsubsec:convnext}
+
+We employ ConvNeXt-Tiny as the frequency encoder to obtain a multi-scale pyramid:
+\begin{equation}
+[\mathbf{F}_{\mathrm{stem}},\mathbf{F}_1,\mathbf{F}_2,\mathbf{F}_3] = \mathrm{ConvNeXtTiny}(\mathbf{I}_{\mathrm{dwt}}),
+\end{equation}
+where
+$\mathbf{F}_{\mathrm{stem}}\!\in\!\mathbb{R}^{C_s\times112\times112}$,
+$\mathbf{F}_1\!\in\!\mathbb{R}^{C_1'\times56\times56}$,
+$\mathbf{F}_2\!\in\!\mathbb{R}^{C_2'\times28\times28}$,
+and $\mathbf{F}_3\!\in\!\mathbb{R}^{C_3'\times14\times14}$.
+To accept $\mathbf{I}_{\mathrm{dwt}}$, we modify the first convolution to match the input channel count.
+$\mathbf{F}_3$ is fused with $\mathbf{S}_1$ in FFBI, while $\mathbf{F}_{\mathrm{stem}},\mathbf{F}_1,\mathbf{F}_2$
+act as skip features for the frequency decoder.
+
+\subsection{FFBI: Bottleneck Fusion Between Semantic and Frequency Streams}
+\label{subsec:ffbi}
+
+The Frequency--Feature Bridging Integration (FFBI) couples the two streams at $14\times14$ bottleneck resolution.
+We flatten bottleneck maps into tokens:
+\begin{equation}
+\mathbf{Z}_s=\mathrm{flat}(\mathbf{S}_1)\in\mathbb{R}^{196\times C_1},\qquad
+\mathbf{Z}_f=\mathrm{flat}(\mathbf{F}_3)\in\mathbb{R}^{196\times C_3'}.
+\end{equation}
+After projecting to a shared width $d$:
+\begin{equation}
+\tilde{\mathbf{Z}}_s=\mathbf{Z}_s\mathbf{W}_s,\quad
+\tilde{\mathbf{Z}}_f=\mathbf{Z}_f\mathbf{W}_f,\qquad
+\mathbf{W}_s\in\mathbb{R}^{C_1\times d},\ \mathbf{W}_f\in\mathbb{R}^{C_3'\times d},
+\end{equation}
+FFBI performs bidirectional cross-attention to exchange complementary cues:
+\begin{equation}
+\hat{\mathbf{Z}}_s = \tilde{\mathbf{Z}}_s + \mathrm{CA}\left(\tilde{\mathbf{Z}}_s,\tilde{\mathbf{Z}}_f,\tilde{\mathbf{Z}}_f\right),\qquad
+\hat{\mathbf{Z}}_f = \tilde{\mathbf{Z}}_f + \mathrm{CA}\left(\tilde{\mathbf{Z}}_f,\tilde{\mathbf{Z}}_s,\tilde{\mathbf{Z}}_s\right).
+\end{equation}
+Optionally, we can further apply text-gating on the fused bottleneck tokens (lightweight and stable):
+\begin{equation}
+[\boldsymbol{\gamma}_b,\boldsymbol{\beta}_b] = \mathrm{MLP}_b(\bar{\mathbf{t}}),\qquad
+\hat{\mathbf{Z}}_s \leftarrow \boldsymbol{\gamma}_b\odot \hat{\mathbf{Z}}_s + \boldsymbol{\beta}_b,\quad
+\hat{\mathbf{Z}}_f \leftarrow \boldsymbol{\gamma}_b\odot \hat{\mathbf{Z}}_f + \boldsymbol{\beta}_b.
+\end{equation}
+We reshape back to feature maps:
+\begin{equation}
+\hat{\mathbf{S}}_1=\mathrm{unflat}(\hat{\mathbf{Z}}_s)\in\mathbb{R}^{d\times14\times14},\qquad
+\hat{\mathbf{F}}_3=\mathrm{unflat}(\hat{\mathbf{Z}}_f)\in\mathbb{R}^{d\times14\times14}.
+\end{equation}
+Finally, both are upsampled to $28\times28$ to initialize two decoders:
+\begin{equation}
+\mathbf{D}_s^0=\mathrm{Up}_2(\hat{\mathbf{S}}_1),\qquad
+\mathbf{D}_f^0=\mathrm{Up}_2(\hat{\mathbf{F}}_3).
+\end{equation}
+
+\subsection{Dual Decoders with Text Conditioning}
+\label{subsec:decoders}
+
+We adopt two symmetric decoders: a semantic decoder (top) and a frequency decoder (bottom).
+Each decoder has three stages producing features at $28\times28$, $56\times56$, and $112\times112$,
+and is conditioned by text at every stage.
+
+\subsubsection{Text conditioning via FiLM}
+\label{subsubsec:film}
+
+We apply FiLM modulation driven by pooled text:
+\begin{equation}
+[\boldsymbol{\gamma},\boldsymbol{\beta}] = \mathrm{MLP}(\bar{\mathbf{t}}),\qquad
+\mathrm{FiLM}(\mathbf{X},\bar{\mathbf{t}})=\boldsymbol{\gamma}\odot \mathbf{X} + \boldsymbol{\beta},
+\end{equation}
+where $\boldsymbol{\gamma},\boldsymbol{\beta}\in\mathbb{R}^{C}$ are broadcast spatially and $\odot$ denotes
+channel-wise multiplication. This provides stable language guidance without heavy cross-modal transformers.
+
+\subsubsection{Decoder stage definition}
+\label{subsubsec:decoder_stage}
+
+At a given scale, a decoder stage merges the current feature map $\mathbf{X}$ with a skip map $\mathbf{S}$:
+\begin{equation}
+\mathbf{Y} = \mathrm{ConvBlock}\Big(\mathrm{concat}(\mathbf{X},\mathbf{S})\Big),
+\qquad
+\mathbf{Y}' = \mathrm{FiLM}(\mathbf{Y},\bar{\mathbf{t}}),
+\qquad
+\mathbf{X}_{\mathrm{next}} = \mathrm{Up}_2(\mathbf{Y}').
+\end{equation}
+$\mathrm{ConvBlock}(\cdot)$ denotes a stack of $3\times3$ convolutions with normalization and nonlinearity.
+
+\subsubsection{Semantic decoder (top branch)}
+\label{subsubsec:sem_decoder}
+
+The semantic decoder starts from $\mathbf{D}_s^0$ (FFBI output at $28\times28$) and uses semantic skips:
+\begin{equation}
+\mathbf{D}_s^1=\mathrm{Dec}_{28}(\mathbf{D}_s^0,\mathbf{S}_2),\quad
+\mathbf{D}_s^2=\mathrm{Dec}_{56}(\mathbf{D}_s^1,\mathbf{S}_3),\quad
+\mathbf{D}_s^3=\mathrm{Dec}_{112}(\mathbf{D}_s^2,\mathbf{S}_4).
+\end{equation}
+
+\subsubsection{Frequency decoder (bottom branch)}
+\label{subsubsec:freq_decoder}
+
+The frequency decoder starts from $\mathbf{D}_f^0$ and uses frequency skips:
+\begin{equation}
+\mathbf{D}_f^1=\mathrm{Dec}_{28}(\mathbf{D}_f^0,\mathbf{F}_2),\quad
+\mathbf{D}_f^2=\mathrm{Dec}_{56}(\mathbf{D}_f^1,\mathbf{F}_1),\quad
+\mathbf{D}_f^3=\mathrm{Dec}_{112}(\mathbf{D}_f^2,\mathbf{F}_{\mathrm{stem}}).
+\end{equation}
+
+\subsection{Output Heads and Fusion}
+\label{subsec:fusion}
+
+Each decoder produces a single-channel logit map via a $1\times1$ convolution:
+\begin{equation}
+\mathbf{L}_s=\mathrm{Head}_s(\mathbf{D}_s^3),\qquad
+\mathbf{L}_f=\mathrm{Head}_f(\mathbf{D}_f^3).
+\end{equation}
+We fuse them using a learnable fusion head:
+\begin{equation}
+\mathbf{L} = \mathrm{Head}_{\mathrm{fuse}}\big(\mathrm{concat}(\mathbf{L}_s,\mathbf{L}_f)\big),\qquad
+\mathbf{M}=\sigma(\mathbf{L}),
+\end{equation}
+where $\sigma$ is sigmoid. In practice, $\mathrm{Head}_{\mathrm{fuse}}$ can be a $1\times1$ conv
+(or a small two-layer conv block) that learns complementary weighting between branches.
+
+\subsection{Training Objective}
+\label{subsec:loss}
+
+We supervise the fused prediction with Dice + BCE:
+\begin{equation}
+\mathcal{L}_{\mathrm{seg}}=
+\mathcal{L}_{Dice}(\mathbf{M},\mathbf{Y})+\lambda\,\mathcal{L}_{BCE}(\mathbf{M},\mathbf{Y}),
+\end{equation}
+where $\mathbf{Y}$ is the ground-truth mask and $\lambda$ balances the terms.
+Optionally, we add deep supervision on branch logits:
+\begin{equation}
+\mathcal{L}=\mathcal{L}_{\mathrm{seg}}+
+\alpha\,\mathcal{L}_{Dice}(\sigma(\mathbf{L}_s),\mathbf{Y})+
+\beta\,\mathcal{L}_{Dice}(\sigma(\mathbf{L}_f),\mathbf{Y}),
+\end{equation}
+with small $\alpha,\beta$ to avoid over-constraining intermediate heads.
+
+\subsection{Implementation Notes}
+\label{subsec:impl}
+
+\paragraph{Trainable components.}
+The FPN adapter, FFBI, both decoders, and fusion head are trained end-to-end. The semantic ViT can be
+(i) frozen with only TCA adapters trainable for stability, or (ii) partially fine-tuned (e.g., last few layers),
+depending on dataset size and overfitting risk.
+
+\paragraph{Why dual-stream?}
+Semantic features provide robust localization under variable appearance, while frequency features highlight edges and
+fine structures. FFBI couples them at the bottleneck to exchange complementary cues before decoding.
+Text guidance is injected both (a) early via TCA in the visual encoder (Sec.~\ref{subsec:tca}) and (b) late via FiLM in
+the decoders, yielding prompt-adaptive segmentation with improved boundary quality.

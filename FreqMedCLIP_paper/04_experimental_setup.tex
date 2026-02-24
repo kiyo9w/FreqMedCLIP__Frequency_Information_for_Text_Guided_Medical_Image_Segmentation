@@ -1,0 +1,94 @@
+\section{Experiments}
+
+\subsection{Datasets}
+
+We evaluate FreqMedCLIP on three diverse medical imaging datasets covering different anatomies and imaging modalities:
+
+\begin{enumerate}
+
+\item \textbf{Brain Tumor Segmentation} (BraTS 2020): 369 subjects with high-grade glioma from multimodal MRI (T1, T1c, T2, FLAIR). We extract 2D axial slices from 3D volumes, yielding 8,000 training slices and 2,200 validation slices. Tumors include necrotic core, edema, and active regions.
+
+\item \textbf{Breast Cancer Segmentation} (CBIS-DDSM): 1,566 mammography scans with binary breast cancer annotations. Extract regions-of-interest (512×512) and resize to 224×224, totaling 3,400 training and 800 validation examples.
+
+\item \textbf{Lung Nodule Segmentation} (Lung Nodule Analysis 2016): CT scans with pulmonary nodules marked by radiologists. 1,018 volumes with 3D nodule masks converted to 2D slices: 4,200 training, 1,000 validation.
+
+\end{enumerate}
+
+All datasets are split: 70\% training, 20\% validation, 10\% test. Class imbalance is addressed through Dice loss and balanced sampling during training.
+
+\subsection{Evaluation Metrics}
+
+\subsubsection{Dice Coefficient (Primary Metric)}
+\begin{equation}
+\text{Dice} = \frac{2|P \cap G|}{|P| + |G|}
+\end{equation}
+
+where $P$ is predicted mask and $G$ is ground truth. Dice measures spatial overlap, ranging [0,1] with 1 being perfect. Common in medical segmentation due to natural handling of class imbalance.
+
+\subsubsection{Intersection-over-Union (IoU)}
+\begin{equation}
+\text{IoU} = \frac{|P \cap G|}{|P \cup G|}
+\end{equation}
+
+Stricter than Dice, IoU penalizes false positives more heavily. Used as secondary metric.
+
+\subsubsection{Hausdorff Distance (Boundary Quality)}
+\begin{equation}
+\text{HD} = \max(\max_{p \in P} \min_{g \in G} d(p,g), \max_{g \in G} \min_{p \in P} d(p,g))
+\end{equation}
+
+Measures maximum distance between predicted and ground truth boundaries. Lower is better. Important for assessing precise boundary localization.
+
+\subsection{Baseline Methods}
+
+\begin{enumerate}
+
+\item \textbf{BiomedCLIP (Semantic-Only)}: Frozen BiomedCLIP with standard U-Net decoder, no frequency information. Establishes semantic baseline.
+
+\item \textbf{Frequency-Only}: Single frequency encoder with decoder, no semantic stream. Shows necessity of semantic context.
+
+\item \textbf{UNet-CLIP} (Conceptual Baseline): Text-conditioned U-Net. Represents standard fusion approach without explicit frequency decomposition.
+
+\item \textbf{SAM-Med2D}: Segment Anything model adapted for 2D medical images. State-of-the-art foundation model for segmentation.
+
+\end{enumerate}
+
+\subsection{Implementation Details}
+
+\textbf{Framework}: PyTorch 2.0
+
+\textbf{Devices}: 4x NVIDIA A100 GPUs (40GB each), distributed training via DataParallel
+
+\textbf{Input Size}: All images resized to 224x224x3
+
+\textbf{Batch Size}: 4 per GPU (16 total), gradient accumulation steps = 2
+
+\textbf{Optimization}: AdamW (lr=1e-4 for new modules, 1e-5 for frozen backbone)
+
+\textbf{Scheduler}: CosineAnnealingLR with T\_max=100
+
+\textbf{Early Stopping}: Patience=10 epochs on validation Dice
+
+\textbf{Epochs}: Maximum 100, typically converge at 50-75
+
+\textbf{Inference Time}: ~80ms per 224×224 image on single A100
+
+\textbf{Model Checkpointing}: Save best checkpoint on validation Dice; ensemble final predictions across 3 best checkpoints
+
+\subsection{Experimental Protocol}
+
+\begin{enumerate}
+
+\item \textbf{Train-Validation-Test Split}: 70-20-10 with stratified sampling to preserve class distribution
+
+\item \textbf{Cross-Dataset Evaluation}: Train on one dataset, test on others (limited) to assess generalization
+
+\item \textbf{Ablation Studies}: Systematically remove components (FFBI, LFFI, frequency encoder) to quantify contributions
+
+\item \textbf{Hyperparameter Sensitivity}: Vary learning rates, layer selections, loss weights
+
+\item \textbf{Statistical Significance}: Report mean ± std over 3 runs with different random seeds
+
+\end{enumerate}
+
+This experimental setup ensures fair comparison with baselines while thoroughly validating architectural design choices through ablation studies.
