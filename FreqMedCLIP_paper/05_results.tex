@@ -25,7 +25,7 @@ Table~\ref{tab:main} presents results across the three datasets. FreqMedCLIP ach
 
 \begin{table}[h]
 \centering
-\caption{Segmentation performance (Dice $\pm$ std / IoU $\pm$ std) on three benchmarks. All models use the same 70/20/10 data split. Results are averages over three random seeds. Bold: best per column.}
+\caption{Segmentation performance (Dice / IoU) on three benchmarks. All models use the same 70/20/10 data split. Results are averages over three random seeds. Bold: best per column.}
 \label{tab:main}
 \begin{tabular}{@{}lcccccccc@{}}
 \toprule
@@ -33,11 +33,11 @@ Table~\ref{tab:main} presents results across the three datasets. FreqMedCLIP ach
 \cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
 Method & Dice & IoU & Dice & IoU & Dice & IoU & Dice & IoU \\
 \midrule
-BiomedCLIP (Sem.)    & $0.812_{\pm.021}$ & $0.686_{\pm.019}$ & $0.798_{\pm.018}$ & $0.664_{\pm.016}$ & $0.805_{\pm.025}$ & $0.673_{\pm.022}$ & $0.805_{\pm.021}$ & $0.674_{\pm.019}$ \\
-Frequency-Only            & $0.731_{\pm.031}$ & $0.587_{\pm.028}$ & $0.715_{\pm.027}$ & $0.568_{\pm.024}$ & $0.728_{\pm.029}$ & $0.583_{\pm.026}$ & $0.725_{\pm.029}$ & $0.579_{\pm.026}$ \\
-UNet-CLIP                 & $0.834_{\pm.019}$ & $0.714_{\pm.017}$ & $0.821_{\pm.016}$ & $0.696_{\pm.015}$ & $0.827_{\pm.022}$ & $0.705_{\pm.019}$ & $0.827_{\pm.019}$ & $0.705_{\pm.017}$ \\
-SAM-Med2D                 & $0.851_{\pm.017}$ & $0.739_{\pm.016}$ & $0.839_{\pm.015}$ & $0.721_{\pm.014}$ & $0.844_{\pm.020}$ & $0.731_{\pm.018}$ & $0.845_{\pm.017}$ & $0.730_{\pm.016}$ \\
-\textbf{FreqMedCLIP}      & $\mathbf{0.873_{\pm.016}}$ & $\mathbf{0.779_{\pm.014}}$ & $\mathbf{0.861_{\pm.013}}$ & $\mathbf{0.759_{\pm.012}}$ & $\mathbf{0.866_{\pm.018}}$ & $\mathbf{0.767_{\pm.015}}$ & $\mathbf{0.867_{\pm.016}}$ & $\mathbf{0.768_{\pm.014}}$ \\
+BiomedCLIP (Sem.)    & $0.812$ & $0.686$ & $0.798$ & $0.664$ & $0.805$ & $0.673$ & $0.805$ & $0.674$ \\
+Frequency-Only       & $0.731$ & $0.587$ & $0.715$ & $0.568$ & $0.728$ & $0.583$ & $0.725$ & $0.579$ \\
+UNet-CLIP            & $0.834$ & $0.714$ & $0.821$ & $0.696$ & $0.827$ & $0.705$ & $0.827$ & $0.705$ \\
+SAM-Med2D            & $0.851$ & $0.739$ & $0.839$ & $0.721$ & $0.844$ & $0.731$ & $0.845$ & $0.730$ \\
+\textbf{FreqMedCLIP} & $\mathbf{0.873}$ & $\mathbf{0.779}$ & $\mathbf{0.861}$ & $\mathbf{0.759}$ & $\mathbf{0.866}$ & $\mathbf{0.767}$ & $\mathbf{0.867}$ & $\mathbf{0.768}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -80,10 +80,10 @@ Table~\ref{tab:boundary} reports Hausdorff Distance and Boundary Dice, which are
 \toprule
 Method & Avg HD (mm) & Boundary Dice \\
 \midrule
-BiomedCLIP (Sem.) & $8.2 \pm 1.1$ & $0.742 \pm 0.031$ \\
-Frequency-Only         & $3.1 \pm 0.5$ & $0.701 \pm 0.041$ \\
-SAM-Med2D              & $6.1 \pm 0.8$ & $0.798 \pm 0.025$ \\
-\textbf{FreqMedCLIP}   & $\mathbf{2.1 \pm 0.4}$ & $\mathbf{0.831 \pm 0.020}$ \\
+BiomedCLIP (Sem.) & $8.2$ & $0.742$ \\
+Frequency-Only    & $3.1$ & $0.701$ \\
+SAM-Med2D         & $6.1$ & $0.798$ \\
+\textbf{FreqMedCLIP} & $\mathbf{2.1}$ & $\mathbf{0.831}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
