@@ -1,0 +1,160 @@
+\begin{thebibliography}{10}
+\providecommand{\url}[1]{\texttt{#1}}
+\providecommand{\urlprefix}{URL }
+\providecommand{\doi}[1]{https://doi.org/#1}
+
+\bibitem{bakas2017brats}
+Bakas, S., Akbari, H., Sotiras, A., Bilello, M., Rozycki, M., Kirby, J.S.,
+  Freymann, J.B., Farahani, K., Davatzikos, C.: Advancing the cancer genome
+  atlas glioma {MRI} collections with expert segmentation labels and radiomic
+  features. Scientific Data  \textbf{4},  170117 (2017)
+
+\bibitem{chen2024transunet}
+Chen, J., Lu, Y., Yu, Q., Luo, X., Adeli, E., Wang, Y., Lu, L., Yuille, A.L.,
+  Zhou, Y.: Transunet: Rethinking the u-net architecture design for medical
+  image segmentation through the lens of transformers. Medical Image Analysis
+  \textbf{97},  103280 (2024)
+
+\bibitem{cheng2024sammed2d}
+Cheng, J., Ye, J., Deng, Z., Chen, J., Li, T., Wang, H., Su, Y., Huang, Z.,
+  Chen, J., Jiang, L., et~al.: {SAM-Med2D}. arXiv preprint arXiv:2308.16184
+  (2023), preprint; no peer-reviewed venue confirmed
+
+\bibitem{dosovitskiy2020image}
+Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X.,
+  Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S.,
+  Uszkoreit, J., Houlsby, N.: An image is worth 16x16 words: Transformers for
+  image recognition at scale. In: International Conference on Learning
+  Representations (ICLR) (2021)
+
+\bibitem{huang2025frequency}
+Huang, Z., Zhou, Y.: Frequency-aware {U-Net} for imbalanced medical image
+  segmentation. arXiv preprint arXiv:2505.17544  (2025), concurrent preprint
+
+\bibitem{isensee2021nnunet}
+Isensee, F., Jaeger, P.F., Kohl, S.A.A., Petersen, J., Maier-Hein, K.H.:
+  nn{U-Net}: a self-configuring method for deep learning-based biomedical image
+  segmentation. Nature Methods  \textbf{18}(2),  203--211 (2021)
+
+\bibitem{kirillov2023segment}
+Kirillov, A., Mintun, E., Ravi, N., Mao, H., Rolland, C., Gustafson, L., Xiao,
+  T., Whitehead, S., Berg, A.C., Lo, W.Y., et~al.: Segment anything. In:
+  Proceedings of the IEEE/CVF International Conference on Computer Vision
+  (ICCV). pp. 4015--4026 (2023)
+
+\bibitem{koleilat2024medclip}
+Koleilat, T., Asgariandehkordi, H., Rivaz, H., Xiao, Y.: {MedCLIP-SAM}:
+  Bridging text and image towards universal medical image segmentation. In:
+  International Conference on Medical Image Computing and Computer-Assisted
+  Intervention (MICCAI). pp. 643--653. Springer (2024)
+
+\bibitem{koleilat2025medclipsamv2}
+Koleilat, T., Asgariandehkordi, H., Rivaz, H., Xiao, Y.: {MedCLIP-SAMv2}:
+  Towards universal text-driven medical image segmentation. Medical Image
+  Analysis p. 103749 (2025)
+
+\bibitem{lee2017cbisddsm}
+Lee, R.S., Gimenez, F., Hoogi, A., Miyake, K.K., Gorovoy, M., Rubin, D.L.: A
+  curated mammography data set for use in computer-aided detection and
+  diagnosis research. Scientific Data  \textbf{4},  170177 (2017)
+
+\bibitem{li2023unleashing}
+Li, C., Wang, B., Zhang, Z., Gao, Y., Shu, R., et~al.: Unleashing the potential
+  of {SAM} for medical adaptation via hierarchical decoding. In: Advances in
+  Neural Information Processing Systems (NeurIPS). vol.~36 (2023)
+
+\bibitem{duwsnet2025}
+Li, X., Wang, Y., Zhang, P.: {DUWS-Net}: Wavelet-based dual {U}-shaped
+  spatial-frequency fusion transformer network for medical image segmentation.
+  Pattern Recognition  \textbf{152},  110422 (2025)
+
+\bibitem{li2024lvit}
+Li, Z., Li, H., Li, Q., Wang, P.A.H., Zou, Q., Wang, D., Yu, L.: {LViT}:
+  Language meets vision transformer in medical image segmentation. IEEE
+  Transactions on Medical Imaging  \textbf{43}(1),  96--107 (2024)
+
+\bibitem{litjens2017survey}
+Litjens, G., Kooi, T., Bejnordi, B.E., Setio, A.A.A., Ciompi, F., Ghafoorian,
+  M., van~der Laak, J.A., van Ginneken, B., S{\'a}nchez, C.I.: A survey on deep
+  learning in medical image analysis. Medical Image Analysis  \textbf{42},
+  60--88 (2017)
+
+\bibitem{liu2022convnet}
+Liu, Z., Mao, H., Wu, C.Y., Feichtenhofer, C., Darrell, T., Xie, S.: A
+  {ConvNet} for the 2020s. In: Proceedings of the IEEE/CVF Conference on
+  Computer Vision and Pattern Recognition (CVPR). pp. 11976--11986 (2022)
+
+\bibitem{ma2024medsam}
+Ma, J., He, Y., Li, F., Han, L., You, C., Wang, B.: Segment anything in medical
+  images. Nature Communications  \textbf{15}(1), ~654 (2024)
+
+\bibitem{maier2024guideline}
+Maier-Hein, L., Reinke, A., Godau, P., et~al.: Metrics reloaded:
+  recommendations for image analysis validation. Nature Methods  \textbf{21},
+  195--212 (2024)
+
+\bibitem{mallat1989wavelet}
+Mallat, S.G.: A theory for multiresolution signal decomposition: the wavelet
+  representation. IEEE Transactions on Pattern Analysis and Machine
+  Intelligence  \textbf{11}(7),  674--693 (1989)
+
+\bibitem{mehta2022qu}
+Mehta, R., Filos, A., Baid, U., et~al.: {QU-BraTS}: {MICCAI} {BraTS} 2020
+  challenge on quantifying uncertainty in brain tumor segmentation --- analysis
+  of ranking metrics and benchmarking results. Journal of Machine Learning for
+  Biomedical Imaging  \textbf{1},  1--26 (2022)
+
+\bibitem{menze2015brats}
+Menze, B.H., Jakab, A., Bauer, S., Kalpathy-Cramer, J., Farahani, K., Kirby,
+  J., Burren, Y., Porz, N., Slotboom, J., Wiest, R., et~al.: The multimodal
+  brain tumor image segmentation benchmark ({BRATS}). IEEE Transactions on
+  Medical Imaging  \textbf{34}(10),  1993--2024 (2015)
+
+\bibitem{oktay2018attention}
+Oktay, O., Schlemper, J., Folgoc, L.L., Lee, M., Heinrich, M., Misawa, K.,
+  Mori, K., McDonagh, S., Hammerla, N.Y., Kainz, B., et~al.: Attention {U-Net}:
+  Learning where to look for the pancreas. In: Medical Imaging with Deep
+  Learning (MIDL) (2018)
+
+\bibitem{park2022vision}
+Park, N., Kim, S.: How do vision transformers work? In: International
+  Conference on Learning Representations (ICLR) (2022)
+
+\bibitem{perez2018film}
+Perez, E., Strub, F., de~Vries, H., Dumoulin, V., Courville, A.: {FiLM}: Visual
+  reasoning with a general conditioning layer. In: Proceedings of the AAAI
+  Conference on Artificial Intelligence. vol.~32 (2018)
+
+\bibitem{radford2021learning}
+Radford, A., Kim, J.W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry,
+  G., Askell, A., Mishkin, P., Clark, J., Krueger, G., Sutskever, I.: Learning
+  transferable visual models from natural language supervision. In: Proceedings
+  of the 38th International Conference on Machine Learning (ICML). pp.
+  8748--8763. PMLR (2021)
+
+\bibitem{ronneberger2015u}
+Ronneberger, O., Fischer, P., Brox, T.: {U-Net}: Convolutional networks for
+  biomedical image segmentation. In: Medical Image Computing and
+  Computer-Assisted Intervention (MICCAI). pp. 234--241. Springer (2015)
+
+\bibitem{setio2017luna16}
+Setio, A.A.A., Traverso, A., de~Bel, T., Berens, M.S.N., van~den Bogaard, C.,
+  Cerello, P., Chen, H., Dou, Q., Fantacci, M.E., Geurts, B., et~al.:
+  Validation, comparison, and combination of algorithms for automatic detection
+  of pulmonary nodules in computed tomography images: the {LUNA16} challenge.
+  Medical Image Analysis  \textbf{42},  1--13 (2017)
+
+\bibitem{yang2020FDA}
+Yang, Y., Soatto, S.: {FDA}: {F}ourier domain adaptation for semantic
+  segmentation. In: Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition (CVPR). pp. 4085--4095 (2020)
+
+\bibitem{zhang2025biomedclip}
+Zhang, S., Xu, Y., Usuyama, N., Xu, H., Bagga, J., Tinn, R., Preston, S., Rao,
+  R., Wei, M., Valluri, N., Wong, C., Tupini, A., Wang, Y., Mazzola, M.,
+  Shukla, S., Liden, L., Gao, J., Crabtree, A., Piening, B., Bifulco, C.,
+  Lungren, M.P., Naumann, T., Wang, S., Poon, H.: A multimodal biomedical
+  foundation model trained from fifteen million image--text pairs. NEJM AI
+  \textbf{2}(2) (2025)
+
+\end{thebibliography}

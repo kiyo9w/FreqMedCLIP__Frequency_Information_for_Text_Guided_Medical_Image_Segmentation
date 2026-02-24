@@ -1,0 +1,181 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand*\HyPL@Entry[1]{}
+\citation{litjens2017survey}
+\HyPL@Entry{0<</S/D>>}
+\@writefile{toc}{\contentsline {title}{FreqMedCLIP: Frequency Information for Text-Guided Medical Image Segmentation}{1}{chapter.1}\protected@file@percent }
+\@writefile{toc}{\authcount {3}}
+\@writefile{toc}{\contentsline {author}{ Ngo Thanh Trung\unskip {} \and Tran Long Vu\unskip {} \and Doan Hoang Long\unskip {} }{1}{chapter.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1.1}\protected@file@percent }
+\citation{ronneberger2015u}
+\citation{isensee2021nnunet,oktay2018attention}
+\citation{dosovitskiy2020image}
+\citation{chen2024transunet}
+\citation{kirillov2023segment}
+\citation{ma2024medsam}
+\citation{zhang2025biomedclip}
+\citation{radford2021learning}
+\citation{li2024lvit}
+\citation{koleilat2024medclip}
+\citation{park2022vision}
+\citation{mallat1989wavelet}
+\citation{dosovitskiy2020image}
+\citation{park2022vision}
+\citation{chen2024transunet}
+\citation{zhang2025biomedclip}
+\citation{kirillov2023segment}
+\citation{cheng2024sammed2d}
+\citation{mallat1989wavelet}
+\citation{yang2020FDA}
+\citation{duwsnet2025}
+\citation{huang2025frequency}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{3}{section.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vision Transformers and Foundation Models for Medical Segmentation.}{3}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Frequency-Domain Analysis in Deep Learning.}{3}{section*.3}\protected@file@percent }
+\citation{isensee2021nnunet}
+\citation{oktay2018attention}
+\citation{li2024lvit}
+\citation{radford2021learning}
+\citation{li2024lvit}
+\citation{koleilat2024medclip}
+\citation{koleilat2025medclipsamv2}
+\citation{li2023unleashing}
+\citation{perez2018film}
+\@writefile{toc}{\contentsline {paragraph}{Dual-Stream and Multi-Scale Fusion Architectures.}{4}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Text-Guided Segmentation.}{4}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Proposed Method}{4}{section.1.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{4}{Proposed Method}{section.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Overview}{4}{subsection.1.3.1}\protected@file@percent }
+\newlabel{subsec:overview}{{3.1}{4}{Overview}{subsection.1.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Architecture overview.} FreqMedCLIP consists of (1) a BiomedCLIP ViT semantic encoder with an FPN adapter (top stream), (2) a Haar DWT + ConvNeXt-Tiny frequency encoder (bottom stream), (3) a bottleneck bidirectional fusion block (FFBI), (4) two symmetric text-conditioned decoders, and (5) a learnable fusion head for final mask prediction.\relax }}{5}{figure.caption.6}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:arch}{{1}{5}{\textbf {Architecture overview.} FreqMedCLIP consists of (1) a BiomedCLIP ViT semantic encoder with an FPN adapter (top stream), (2) a Haar DWT + ConvNeXt-Tiny frequency encoder (bottom stream), (3) a bottleneck bidirectional fusion block (FFBI), (4) two symmetric text-conditioned decoders, and (5) a learnable fusion head for final mask prediction.\relax }{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Pipeline summary.}{5}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Notation.}{5}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Input Processing}{5}{subsection.1.3.2}\protected@file@percent }
+\newlabel{subsec:input}{{3.2}{5}{Input Processing}{subsection.1.3.2}{}}
+\citation{perez2018film}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Text Encoder}{6}{subsection.1.3.3}\protected@file@percent }
+\newlabel{subsec:text}{{3.3}{6}{Text Encoder}{subsection.1.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Semantic Stream: BiomedCLIP ViT with FPN Adapter}{6}{subsection.1.3.4}\protected@file@percent }
+\newlabel{subsec:semantic}{{3.4}{6}{Semantic Stream: BiomedCLIP ViT with FPN Adapter}{subsection.1.3.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Multi-layer ViT feature extraction.}{6}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Text-Conditioned Adapters (TCA).}{6}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{FPN Adapter: semantic pyramid $\mathbf  {S}_1\!\rightarrow \!\mathbf  {S}_4$.}{6}{section*.11}\protected@file@percent }
+\citation{liu2022convnet}
+\citation{perez2018film}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Frequency Stream: Haar DWT + ConvNeXt-Tiny}{7}{subsection.1.3.5}\protected@file@percent }
+\newlabel{subsec:frequency}{{3.5}{7}{Frequency Stream: Haar DWT + ConvNeXt-Tiny}{subsection.1.3.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Haar DWT decomposition.}{7}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{ConvNeXt-Tiny frequency encoder pyramid.}{7}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}FFBI: Bottleneck Fusion Between Semantic and Frequency Streams}{7}{subsection.1.3.6}\protected@file@percent }
+\newlabel{subsec:ffbi}{{3.6}{7}{FFBI: Bottleneck Fusion Between Semantic and Frequency Streams}{subsection.1.3.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Dual Decoders with Language-Guided Feature Fusion (LFFI)}{7}{subsection.1.3.7}\protected@file@percent }
+\newlabel{subsec:decoders}{{3.7}{7}{Dual Decoders with Language-Guided Feature Fusion (LFFI)}{subsection.1.3.7}{}}
+\citation{menze2015brats,bakas2017brats,mehta2022qu}
+\citation{lee2017cbisddsm}
+\citation{setio2017luna16}
+\@writefile{toc}{\contentsline {paragraph}{Semantic decoder.}{8}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Frequency decoder.}{8}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.8}Output Heads and Fusion}{8}{subsection.1.3.8}\protected@file@percent }
+\newlabel{subsec:fusion}{{3.8}{8}{Output Heads and Fusion}{subsection.1.3.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.9}Training Objective}{8}{subsection.1.3.9}\protected@file@percent }
+\newlabel{subsec:loss}{{3.9}{8}{Training Objective}{subsection.1.3.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{Trainable components.}{8}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Dataset and Implementation Setup}{8}{section.1.4}\protected@file@percent }
+\newlabel{sec:setup}{{4}{8}{Dataset and Implementation Setup}{section.1.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Datasets.}{8}{section*.17}\protected@file@percent }
+\citation{maier2024guideline}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Dataset statistics. All splits follow a 70/20/10 stratified partition.\relax }}{9}{table.caption.18}\protected@file@percent }
+\newlabel{tab:datasets}{{1}{9}{Dataset statistics. All splits follow a 70/20/10 stratified partition.\relax }{table.caption.18}{}}
+\@writefile{toc}{\contentsline {paragraph}{Implementation Details.}{9}{section*.19}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Implementation hyperparameters.\relax }}{9}{table.caption.20}\protected@file@percent }
+\newlabel{tab:impl}{{2}{9}{Implementation hyperparameters.\relax }{table.caption.20}{}}
+\@writefile{toc}{\contentsline {paragraph}{Evaluation Metrics.}{9}{section*.21}\protected@file@percent }
+\citation{cheng2024sammed2d}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Analysis and Results}{10}{section.1.5}\protected@file@percent }
+\newlabel{sec:results}{{5}{10}{Analysis and Results}{section.1.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Baseline Methods}{10}{subsection.1.5.1}\protected@file@percent }
+\newlabel{subsec:baselines}{{5.1}{10}{Baseline Methods}{subsection.1.5.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{BiomedCLIP (Semantic-Only).}{10}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Frequency-Only.}{10}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{UNet-CLIP.}{10}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{SAM-Med2D\nobreakspace  {}\cite  {cheng2024sammed2d}.}{10}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Quantitative Results}{10}{subsection.1.5.2}\protected@file@percent }
+\newlabel{subsec:quant}{{5.2}{10}{Quantitative Results}{subsection.1.5.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Segmentation performance (Dice $\pm $ std / IoU $\pm $ std) on three benchmarks. All models use the same 70/20/10 data split. Results are averages over three random seeds. Bold: best per column.\relax }}{10}{table.caption.26}\protected@file@percent }
+\newlabel{tab:main}{{3}{10}{Segmentation performance (Dice $\pm $ std / IoU $\pm $ std) on three benchmarks. All models use the same 70/20/10 data split. Results are averages over three random seeds. Bold: best per column.\relax }{table.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Ablation Studies}{11}{subsection.1.5.3}\protected@file@percent }
+\newlabel{subsec:ablation}{{5.3}{11}{Ablation Studies}{subsection.1.5.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Ablation results. Each column shows $\Delta $Dice when the named component is removed from the full model. All variants trained with the same protocol, reported over three seeds.\relax }}{11}{table.caption.27}\protected@file@percent }
+\newlabel{tab:ablation}{{4}{11}{Ablation results. Each column shows $\Delta $Dice when the named component is removed from the full model. All variants trained with the same protocol, reported over three seeds.\relax }{table.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Boundary Quality Analysis}{12}{subsection.1.5.4}\protected@file@percent }
+\newlabel{subsec:boundary}{{5.4}{12}{Boundary Quality Analysis}{subsection.1.5.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Boundary quality metrics. HD (mm): lower is better. Boundary Dice: higher is better.\relax }}{12}{table.caption.28}\protected@file@percent }
+\newlabel{tab:boundary}{{5}{12}{Boundary quality metrics. HD (mm): lower is better. Boundary Dice: higher is better.\relax }{table.caption.28}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Qualitative Results}{12}{subsection.1.5.5}\protected@file@percent }
+\newlabel{subsec:qualitative}{{5.5}{12}{Qualitative Results}{subsection.1.5.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Qualitative segmentation results.} One representative inference result per dataset. Ground truth boundary shown in green, FreqMedCLIP prediction in red, SAM-Med2D in blue. \emph  {[Placeholder: replace with actual inference outputs before submission.]}\relax }}{12}{figure.caption.29}\protected@file@percent }
+\newlabel{fig:qualitative}{{2}{12}{\textbf {Qualitative segmentation results.} One representative inference result per dataset. Ground truth boundary shown in green, FreqMedCLIP prediction in red, SAM-Med2D in blue. \emph {[Placeholder: replace with actual inference outputs before submission.]}\relax }{figure.caption.29}{}}
+\citation{park2022vision}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Per-stream activation maps.} Feature saliency after FFBI fusion. Semantic activations (centre-left) capture coarse anatomical regions. Frequency activations (centre-right) highlight boundary structures. The fused map (right) combines both, producing sharper, semantically constrained boundaries. \emph  {[Placeholder: replace with Grad-CAM or similar visualisations before submission.]}\relax }}{13}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:activations}{{3}{13}{\textbf {Per-stream activation maps.} Feature saliency after FFBI fusion. Semantic activations (centre-left) capture coarse anatomical regions. Frequency activations (centre-right) highlight boundary structures. The fused map (right) combines both, producing sharper, semantically constrained boundaries. \emph {[Placeholder: replace with Grad-CAM or similar visualisations before submission.]}\relax }{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Computational Efficiency}{13}{subsection.1.5.6}\protected@file@percent }
+\newlabel{subsec:efficiency}{{5.6}{13}{Computational Efficiency}{subsection.1.5.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Inference time and GPU memory on a single A100.\relax }}{13}{table.caption.31}\protected@file@percent }
+\newlabel{tab:efficiency}{{6}{13}{Inference time and GPU memory on a single A100.\relax }{table.caption.31}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion}{13}{section.1.6}\protected@file@percent }
+\newlabel{sec:discussion}{{6}{13}{Discussion}{section.1.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Interpreting the performance gains.}{13}{section*.32}\protected@file@percent }
+\citation{li2024lvit}
+\@writefile{toc}{\contentsline {paragraph}{Clinical relevance of boundary quality.}{14}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Frequency-semantic dissociation.}{14}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Text guidance and its limits.}{14}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Limitations.}{14}{section*.36}\protected@file@percent }
+\bibstyle{splncs04}
+\bibdata{reference}
+\bibcite{bakas2017brats}{1}
+\bibcite{chen2024transunet}{2}
+\bibcite{cheng2024sammed2d}{3}
+\bibcite{dosovitskiy2020image}{4}
+\bibcite{huang2025frequency}{5}
+\bibcite{isensee2021nnunet}{6}
+\bibcite{kirillov2023segment}{7}
+\bibcite{koleilat2024medclip}{8}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{15}{section.1.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{15}{Conclusion}{section.1.7}{}}
+\bibcite{koleilat2025medclipsamv2}{9}
+\bibcite{lee2017cbisddsm}{10}
+\bibcite{li2023unleashing}{11}
+\bibcite{duwsnet2025}{12}
+\bibcite{li2024lvit}{13}
+\bibcite{litjens2017survey}{14}
+\bibcite{liu2022convnet}{15}
+\bibcite{ma2024medsam}{16}
+\bibcite{maier2024guideline}{17}
+\bibcite{mallat1989wavelet}{18}
+\bibcite{mehta2022qu}{19}
+\bibcite{menze2015brats}{20}
+\bibcite{oktay2018attention}{21}
+\bibcite{park2022vision}{22}
+\bibcite{perez2018film}{23}
+\bibcite{radford2021learning}{24}
+\bibcite{ronneberger2015u}{25}
+\bibcite{setio2017luna16}{26}
+\bibcite{yang2020FDA}{27}
+\bibcite{zhang2025biomedclip}{28}
+\gdef \@abspage@last{17}
